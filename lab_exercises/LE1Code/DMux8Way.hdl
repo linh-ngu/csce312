@@ -1,0 +1,33 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            {0, 0, in, 0, 0, 0, 0, 0} if sel == 010
+ *                            {0, 0, 0, in, 0, 0, 0, 0} if sel == 011
+ *                            {0, 0, 0, 0, in, 0, 0, 0} if sel == 100
+ *                            {0, 0, 0, 0, 0, in, 0, 0} if sel == 101
+ *                            {0, 0, 0, 0, 0, 0, in, 0} if sel == 110
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    // Put your code here:
+    
+    // same as dmux4way but more
+    DMux(in=in, sel=sel[2], a=first, b=second);
+    
+    DMux(in=first, sel=sel[1], a=one, b=two);
+    DMux(in=second, sel=sel[1], a=three, b=four);
+
+    DMux(in=one, sel=sel[0], a=a, b=b);
+    DMux(in=two, sel=sel[0], a=c, b=d);
+    DMux(in=three, sel=sel[0], a=e, b=f);
+    DMux(in=four, sel=sel[0], a=g, b=h);
+}

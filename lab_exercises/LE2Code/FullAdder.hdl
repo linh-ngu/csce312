@@ -1,0 +1,13 @@
+//Name: Linh Nguyen
+//UIN: 231007811
+
+CHIP FullAdder {
+    IN a, b, c;
+    OUT sum, carry;
+
+    PARTS:
+    
+    HalfAdder(a=a,b=b,sum=ab,carry=cab);
+    HalfAdder(a=ab,b=c,sum=sum,carry=cabc);
+    Or(a=cab,b=cabc,out=carry);
+}

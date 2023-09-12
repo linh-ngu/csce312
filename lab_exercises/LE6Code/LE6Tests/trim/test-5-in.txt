@@ -1,0 +1,7 @@
+ok, now let's //put it all together  
+//with some comments,
+
+  blank lines,
+  
+and whitespace   
+and such    //:)

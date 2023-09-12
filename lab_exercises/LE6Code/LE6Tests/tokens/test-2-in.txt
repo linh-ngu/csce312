@@ -1,0 +1,2 @@
+ADDI R7, R6, 6
+JMP R3

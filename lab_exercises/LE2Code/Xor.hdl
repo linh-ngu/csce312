@@ -1,0 +1,20 @@
+//Name: Linh Nguyen
+//UIN: 231007811
+
+/**
+ * Exclusive-or gate:
+ * out = not (a == b)
+ */
+
+CHIP Xor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Not(in=a, out=notA);
+    Not(in=b, out=notB);
+    And(a=a, b=notB, out=c);
+    And(a=notA, b=b, out=d);
+    Or(a=c, b=d, out=out);
+}

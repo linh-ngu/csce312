@@ -1,0 +1,19 @@
+//Name: Linh Nguyen
+//UIN: 231007811
+
+/**
+ * 16-bit incrementer:
+ * out = in + 1 (arithmetic addition)
+ * in is UNSIGNED
+ * carry output is intentionally ignored
+ */
+
+CHIP Inc16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+
+    Add16(a=in, b[0]=true, out=out);
+}

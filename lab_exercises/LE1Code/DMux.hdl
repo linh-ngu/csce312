@@ -1,0 +1,21 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/**
+ * Demultiplexor:
+ * {a, b} = {in, 0} if sel == 0
+ *          {0, in} if sel == 1
+ */
+
+CHIP DMux {
+    IN in, sel;
+    OUT a, b;
+
+    PARTS:
+    // Put your code here:
+    
+    // dmux: P = IS' Q = IS
+    Not(in=sel, out=notSel);
+    And(a=in, b=notSel, out=a);
+    And(a=in, b=sel, out=b);
+}

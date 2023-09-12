@@ -1,0 +1,12 @@
+this file, tests
+TEST a, b c
+erroneous cases
+TEST, a, b
+there should, only, be
+TEST, a b
+six lines, in, the, output
+TEST a b
+and it, should
+TEST a , b, c
+include this, one
+TEST a, b,, c

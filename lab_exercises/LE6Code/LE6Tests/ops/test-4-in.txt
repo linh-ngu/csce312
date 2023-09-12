@@ -1,0 +1,7 @@
+ADDI
+a
+READ
+WRITE WRITE
+BEQ
+jjjj
+INP

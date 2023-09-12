@@ -1,0 +1,20 @@
+//Name: Linh Nguyen
+//UIN: 231007811
+
+/**
+ * Negate a 16-bit number in 2's complement format.
+ * 2’s complement of the input 
+ * carry out is intentionally ignored.
+ * Input in is in 2s complement format
+ */
+
+CHIP Negation16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+
+    Not16(in=in, out=out1);
+    Add16(a=out1, b[0]=true, out=out);
+}

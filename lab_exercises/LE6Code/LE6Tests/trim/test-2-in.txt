@@ -1,0 +1,1 @@
+this file tests removal of comments//at the end of a line

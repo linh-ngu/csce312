@@ -1,0 +1,5 @@
+NAND
+NOR
+WRITE
+JMP
+OUT

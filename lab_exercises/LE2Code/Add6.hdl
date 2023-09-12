@@ -1,0 +1,25 @@
+//Name: Linh Nguyen
+//UIN: 231007811
+
+/**
+ * Adds two 6-bit values
+ * The chip performs out=a+b
+ * Both inputs a and b are UNSIGNED 
+ * The carry output reflects the overflow of the Add6 chip
+ */
+
+
+CHIP Add6 {
+    IN a[6], b[6];
+    OUT out[6],carry;
+
+    PARTS:
+    // Put your code here:
+
+    HalfAdder(a=a[0],b=b[0],sum=out[0],carry=d);
+	FullAdder(a=a[1],b=b[1],c=d,sum=out[1],carry=e);
+	FullAdder(a=a[2],b=b[2],c=e,sum=out[2],carry=f);
+	FullAdder(a=a[3],b=b[3],c=f,sum=out[3],carry=g);
+	FullAdder(a=a[4],b=b[4],c=g,sum=out[4],carry=h);
+	FullAdder(a=a[5],b=b[5],c=h,sum=out[5],carry=carry);
+}

@@ -1,0 +1,3 @@
+this file tests omission of blank lines
+
+in your output, these two sentences should be together
