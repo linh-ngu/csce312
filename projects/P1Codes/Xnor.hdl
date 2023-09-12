@@ -1,0 +1,20 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/**
+ * Exclusive-Nor gate:
+ * out = (a == b)
+ */
+
+CHIP Xnor {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Not(in=a, out=notA);
+    Not(in=b, out=notB);
+    And(a=a, b=b, out=c);
+    And(a=notA, b=notB, out=d);
+    Or(a=c, b=d, out=out);
+}

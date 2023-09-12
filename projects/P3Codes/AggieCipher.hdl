@@ -1,0 +1,20 @@
+// NAME AND UIN
+// Linh Nguyen
+// 231007811
+
+/**
+ * Implement a 4-bit dynamic shift cipher (we call it AggieCipher :)) that computes 
+ * out=in+counter, where counter=<0,1,2,3,4,5,6,....,15,0,1,2,...>
+ * You may ignore overflow.
+ **/
+
+CHIP AggieCipher {
+    IN in[4];
+    OUT out[4];
+    
+	PARTS:
+    // Put your code here:
+
+    PC(in=false, load=false, inc=true, reset=false, out=counter);
+    Add16(a[0..3]=in, b=counter, out[0..3]=out);
+}

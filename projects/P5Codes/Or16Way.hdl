@@ -1,0 +1,33 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/**
+ * 8-way Or: 
+ * out = (in[0] or in[1] or ... or in[7])
+ */
+
+CHIP Or16Way {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Or(a=in[0], b=in[1], out=a);
+    Or(a=in[2], b=in[3], out=b);
+    Or(a=in[4], b=in[5], out=c);
+    Or(a=in[6], b=in[7], out=d);
+    Or(a=in[8], b=in[9], out=e);
+    Or(a=in[10], b=in[11], out=f);
+    Or(a=in[12], b=in[13], out=g);
+    Or(a=in[14], b=in[15], out=h);
+
+    Or(a=a, b=b, out=i);
+    Or(a=c, b=d, out=j);
+    Or(a=e, b=f, out=k);
+    Or(a=g, b=h, out=l);
+
+    Or(a=i, b=j, out=m);
+    Or(a=k, b=l, out=n);
+
+    Or(a=m, b=n, out=out);
+}

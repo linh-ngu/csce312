@@ -1,0 +1,111 @@
+// Name and UIN
+// Linh Nguyen
+// 231007811
+
+CHIP CPU{
+
+    IN  fromM[16],          // M value input  (M = contents of RAM[Address])
+        In[16],    	        // Instruction for execution
+        Reset;              // Signals whether to re-start the current
+                            // program (Reset==1) or continue executing
+                            // the current program (Reset==0).
+
+    OUT toM[16],            // M value output
+        writeM,             // Write to M 
+        addressM[16],       // Address in data memory (of M)
+        PCOut[16];          // address of next instruction
+
+    PARTS:
+    // Instruction bits along with the inverted versions
+    Not(in=In[15], out=In15);
+    Not(in=In[14], out=In14);
+    Not(in=In[13], out=In13);
+    Not(in=In[12], out=In12);
+    Mux16(a=outALU, b=fromM, sel=In[15], out=ALUorM);
+
+    // 1. Register control //
+    And(a=In[15], b=In14, out=read1);
+    And(a=read1, b=In13, out=read2);
+    And(a=read2, b=In12, out=read);
+
+    And(a=In[15], b=In[14], out=inp1);
+    And(a=inp1, b=In[13], out=inp2);
+    And(a=inp2, b=In12, out=inp);
+
+    Or(a=read, b=inp, out=ReadOrInp);
+    Or(a=In15, b=ReadOrInp, out=regCon);
+    
+    DMux8Way(in=regCon, sel=In[9..11], a=l0, b=l1, c=l2, d=l3, e=l4, f=l5, g=l6, h=l7);
+
+    Register(in=ALUorM, load=l0, out=r0);
+    Register(in=ALUorM, load=l1, out=r1);
+    Register(in=ALUorM, load=l2, out=r2);
+    Register(in=ALUorM, load=l3, out=r3);
+    Register(in=ALUorM, load=l4, out=r4);
+    Register(in=ALUorM, load=l5, out=r5);
+    Register(in=ALUorM, load=l6, out=r6);
+    Register(in=ALUorM, load=l7, out=r7);
+    // Register control //
+    
+    // 2. ALU //
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[6..8], out=ALU1);
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[3..5], out=mux3);
+
+    Mux16(a=mux3, b[0..5]=In[0..5], sel=In[12], out=ALU2);
+
+    ALU(AluOp=In[12..15], x=ALU1, y=ALU2, AluOut=outALU, overflow=false);
+    // ALU //
+
+    // 3. Prepare the Memory Address addressM (in case of READ and Write), Memory Data toM (in case of Write or OUT)
+    // addressM //
+    And(a=In[15], b=In[14], out=out1);
+    And(a=out1, b=In13, out=out2);
+    And(a=out2, b=In12, out=out);
+
+    And(a=In[15], b=In14, out=write1);
+    And(a=write1, b=In[13], out=write2);
+    And(a=write2, b=In12, out=write);
+    
+    Or(a=out, b=write, out=WriteOrOut);
+    
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[6..8], out=ReadInp);
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[9..11], out=WriteOut);
+
+    Mux16(a=ReadInp, b[15]=true, b[13]=true, sel=inp, out=RI);
+    Mux16(a=WriteOut, b=RI, sel=ReadOrInp, out=addressM);
+
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[6..8], out=tom);
+    Mux16(a=false, b=tom, sel=WriteOrOut, out=toM);
+    // addressM //
+
+    // 4. Generate the writeM signal (memory write for RAM or Screen)
+    // writeM is true if it is a Memory Write operation or a Screen OUT operation
+    // writeM //
+    Or(a=out, b=write, out=writeM);
+    // writeM //
+    
+    // 5. We load the PC with new value if there is a branch
+    // Branch can be conditional or unconditional
+    // Unconditional => In[15..12] = 1011
+    // Conditional => In[15..12] = 1001 && In[8..6]==000
+    // PC //
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[9..11], out=JMPtoPC);
+    Mux8Way16(a=r0, b=r1, c=r2, d=r3, e=r4, f=r5, g=r6, h=r7, sel=In[6..8], out=BEQtoPC);
+
+    Or16Way(in=BEQtoPC, out=beq0);
+    Not(in=beq0, out=beq);
+
+    And(a=In[15], b=In14, out=in1415);
+    And(a=in1415, b=In[13], out=in131415);
+    And(a=in131415, b=In[12], out=unconditional);
+
+    And(a=in1415, b=In13, out=cin131415);
+    And(a=cin131415, b=In[12], out=conditional);
+
+    And(a=conditional, b=beq, out=beqconditional);
+
+    Or(a=beqconditional, b=unconditional, out=LoadPC);
+
+    PC(in=JMPtoPC, load=LoadPC, inc=true, reset=Reset, out=PCOut);
+    // PC //
+} 

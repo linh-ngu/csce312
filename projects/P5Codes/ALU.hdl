@@ -1,0 +1,53 @@
+// Code Authored by Aakash Tyagi and Mayukh RoyChowdhury CSCE-312
+// The Custom ALU is provided as IP to be used in construction of the CPU
+
+CHIP ALU {
+    IN AluOp[4], x[16], y[16];
+    OUT AluOut[16], overflow;
+	
+	
+	// AluOp bits correspond to instruction[15:12] based on the BITBOT instruction spec
+	
+
+PARTS:
+
+//invert the y input to prepare for executing a subtract operation
+	Not16(in[0..15] = y, out[0..15] = Noty);
+	
+//send y and Noty to a Mux16 with AluOp
+	Mux16(a=y, b=Noty, sel=AluOp[1], out[0]=AddORSub0, out[1]=AddORSub1, out[2]=AddORSub2, out[3]=AddORSub3, out[4]=AddORSub4, out[5]=AddORSub5, out[6]=AddORSub6, out[7]=AddORSub7, out[8]=AddORSub8, out[9]=AddORSub9, out[10]=AddORSub10, out[11]=AddORSub11, out[12]=AddORSub12, out[13]=AddORSub13, out[14]=AddORSub14, out[15]=AddORSub15 );
+	
+//perform Add/Subtract computation along with overflow
+	FullAdder(a=x[0] ,b=AddORSub0 ,c=AluOp[1] ,sum=AddSubOut0 ,carry=carry0 );
+	FullAdder(a=x[1] ,b=AddORSub1 ,c=carry0 ,sum=AddSubOut1 ,carry=carry1 );
+	FullAdder(a=x[2] ,b=AddORSub2 ,c=carry1 ,sum=AddSubOut2 ,carry=carry2 );
+	FullAdder(a=x[3] ,b=AddORSub3 ,c=carry2 ,sum=AddSubOut3 ,carry=carry3 );
+	FullAdder(a=x[4] ,b=AddORSub4 ,c=carry3 ,sum=AddSubOut4 ,carry=carry4 );
+	FullAdder(a=x[5] ,b=AddORSub5 ,c=carry4 ,sum=AddSubOut5 ,carry=carry5 );
+	FullAdder(a=x[6] ,b=AddORSub6 ,c=carry5 ,sum=AddSubOut6 ,carry=carry6 );
+	FullAdder(a=x[7] ,b=AddORSub7 ,c=carry6 ,sum=AddSubOut7 ,carry=carry7 );
+	FullAdder(a=x[8] ,b=AddORSub8 ,c=carry7 ,sum=AddSubOut8 ,carry=carry8 );
+	FullAdder(a=x[9] ,b=AddORSub9 ,c=carry8 ,sum=AddSubOut9 ,carry=carry9 );
+	FullAdder(a=x[10] ,b=AddORSub10 ,c=carry9 ,sum=AddSubOut10 ,carry=carry10 );
+	FullAdder(a=x[11] ,b=AddORSub11 ,c=carry10 ,sum=AddSubOut11 ,carry=carry11 );
+	FullAdder(a=x[12] ,b=AddORSub12 ,c=carry11 ,sum=AddSubOut12 ,carry=carry12 );
+	FullAdder(a=x[13] ,b=AddORSub13 ,c=carry12 ,sum=AddSubOut13 ,carry=carry13 );
+	FullAdder(a=x[14] ,b=AddORSub14 ,c=carry13 ,sum=AddSubOut14 ,carry=carry14 );
+	FullAdder(a=x[15] ,b=AddORSub15 ,c=carry14 ,sum=AddSubOut15 ,carry=carry15 );
+
+	Xor(a=carry14 ,b=carry15 ,out=overflow );
+	
+//perform NAND logical operation
+	And16(a[0..15]=x, b[0..15]=y, out=and);
+	Not16(in = and , out = NandOut);
+
+//perform NOR logical operation
+	Or16(a[0..15]= x, b[0..15]=y, out=or);
+	Not16(in = or, out = NorOut);
+	
+//MUX between the logical operations
+	Mux16(a=NandOut, b=NorOut, sel=AluOp[1], out=LogicalOut);
+	
+//MUX between the arithmetic and logical operations
+	Mux16(a[0]=AddSubOut0, a[1]=AddSubOut1, a[2]=AddSubOut2, a[3]=AddSubOut3, a[4]=AddSubOut4, a[5]=AddSubOut5, a[6]=AddSubOut6, a[7]=AddSubOut7, a[8]=AddSubOut8, a[9]=AddSubOut9, a[10]=AddSubOut10, a[11]=AddSubOut11, a[12]=AddSubOut12, a[13]=AddSubOut13, a[14]=AddSubOut14, a[15]=AddSubOut15, b=LogicalOut, sel=AluOp[2], out=AluOut );	
+}

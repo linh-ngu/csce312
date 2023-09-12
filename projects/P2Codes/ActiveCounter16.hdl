@@ -1,0 +1,32 @@
+// Name and UIN
+// Linh Nguyen
+// 231007811
+
+/**
+ * Counts the number of active(1) bits in a 16-bit input and outputs the result as a 5-bit
+ */
+
+CHIP ActiveCounter16 {
+    IN in[16];
+    OUT out[5];
+
+    PARTS:
+    // Put your code here:
+    
+    Add4(a[0]=in[0], b=false, c=false, sum=c, carry=c1);
+    Add4(a=c, b[0]=in[1], c=false, sum=d, carry=c2);
+    Add4(a=d, b[0]=in[2], c=false, sum=e, carry=c3);
+    Add4(a=e, b[0]=in[3], c=false, sum=f, carry=c4);
+    Add4(a=f, b[0]=in[4], c=false, sum=g, carry=c5);
+    Add4(a=g, b[0]=in[5], c=false, sum=h, carry=c6);
+    Add4(a=h, b[0]=in[6], c=false, sum=i, carry=c7);
+    Add4(a=i, b[0]=in[7], c=false, sum=j, carry=c8);
+    Add4(a=j, b[0]=in[8], c=false, sum=k, carry=c9);
+    Add4(a=k, b[0]=in[9], c=false, sum=l, carry=c10);
+    Add4(a=l, b[0]=in[10], c=false, sum=m, carry=c11);
+    Add4(a=m, b[0]=in[11], c=false, sum=n, carry=c12);
+    Add4(a=n, b[0]=in[12], c=false, sum=o, carry=c13);
+    Add4(a=o, b[0]=in[13], c=false, sum=p, carry=c14);
+    Add4(a=p, b[0]=in[14], c=false, sum=q, carry=c15);
+    Add4(a=q, b[0]=in[15], c=false, sum=out[0..3], carry=out[4]);
+}

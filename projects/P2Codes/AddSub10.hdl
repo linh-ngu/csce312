@@ -1,0 +1,37 @@
+// Name and UIN
+// Linh Nguyen
+// 231007811
+
+/**
+ * Adds or Subtracts two 10-bit values.
+ * Both inputs a and b are in SIGNED 2s complement format
+ * when sub == 0, the chip performs add i.e. out=a+b
+ * when sub == 1, the chip performs subtract i.e. out=a-b
+ * carry reflects the overflow calculated for 10-bit add/subtract in 2s complement
+ */
+
+CHIP AddSub10 {
+    IN a[10], b[10], sub;
+    OUT out[10], carry;
+
+    PARTS:
+   // Put you code here:
+
+    Negation16(in[0..9]=b, out=notB);
+    Mux16(a[0..9]=b, b=notB, sel=sub, out[0]=c0, out[1]=c1, out[2]=c2, out[3]=c3, out[4]=c4, out[5]=c5, out[6]=c6, out[7]=c7, out[8]=c8, out[9]=c9);
+
+    HalfAdder(a=a[0],b=c0,sum=out[0],carry=d);
+	FullAdder(a=a[1],b=c1,c=d,sum=out[1],carry=e);
+	FullAdder(a=a[2],b=c2,c=e,sum=out[2],carry=f);
+	FullAdder(a=a[3],b=c3,c=f,sum=out[3],carry=g);
+	FullAdder(a=a[4],b=c4,c=g,sum=out[4],carry=h);
+	FullAdder(a=a[5],b=c5,c=h,sum=out[5],carry=i);
+    FullAdder(a=a[6],b=c6,c=i,sum=out[6],carry=j);
+	FullAdder(a=a[7],b=c7,c=j,sum=out[7],carry=k);
+	FullAdder(a=a[8],b=c8,c=k,sum=out[8],carry=l);
+	FullAdder(a=a[9],b=c9,c=l,sum=out[9],carry=c);
+
+    Xor(a=c, b=l, out=bb);
+
+    Mux(a=c, b=bb, sel=sub, out=carry);
+}

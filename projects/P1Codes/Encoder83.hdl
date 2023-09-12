@@ -1,0 +1,57 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/**
+ * Encoder 
+ * out always contains the encoded id of the active input
+ * at any time only one bit in a[8] can be 1
+ * idle is 1 if all inputs are inactive, otherwise it is 0
+ */
+
+CHIP Encoder83 {
+    IN a[8];
+    OUT out[3], idle;
+
+    PARTS:
+    // Put your code here:
+
+    // x7   x6	x5	x4	x3	x2	x1	x0		y2	y1	y0                                         
+    // 0    0   0	0	0	0	0	1		0	0	0
+    // 0    0	0	0	0	0	1	0		0	0	1
+    // 0    0	0	0	0	1	0	0		0	1	0
+    // 0    0	0	0	1	0	0	0		0	1	1
+    // 0	0	0	1	0	0	0	0		1	0	0
+    // 0	0	1	0	0	0	0	0		1	0	1
+    // 0	1	0	0	0	0	0	0		1	1	0
+    // 1	0	0	0	0	0	0	0		1	1	1
+
+    // y2 = x7 + x6 + x5 + x4
+    // y1 = x7 + x6 + x3 + x2
+    // y0 = x7 + x5 + x3 + x1
+
+    Or(a=a[7], b=a[6], out=c);
+    Or(a=a[5], b=a[4], out=d);
+
+    Or(a=c, b=d, out=out[2]);
+
+    Or(a=a[7], b=a[6], out=e);
+    Or(a=a[3], b=a[2], out=f);
+
+    Or(a=e, b=f, out=out[1]);
+
+    Or(a=a[7], b=a[5], out=g);
+    Or(a=a[3], b=a[1], out=h);
+
+    Or(a=g, b=h, out=out[0]);
+
+    Or(a=a[0], b=a[1], out=idle1);
+    Or(a=a[2], b=a[3], out=idle2);
+    Or(a=a[4], b=a[5], out=idle3);
+    Or(a=a[6], b=a[7], out=idle4);
+
+    Or(a=idle1, b=idle2, out=idle11);
+    Or(a=idle3, b=idle4, out=idle12);
+
+    Nor(a=idle11, b=idle12, out=idle);
+
+}

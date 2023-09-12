@@ -1,0 +1,20 @@
+//NAME AND UIN
+// Linh Nguyen
+// 231007811
+
+//Fibonacci Number Generator
+//Given two initial numbers f0 and f1, the sequence will be generated
+
+CHIP Fibonacci {
+	IN f0[16], f1[16], msel, enable1, enable2 ;
+	OUT out[16];
+
+	PARTS:
+	//Put your code here
+
+	Mux16(a=f0, b=o5, sel=msel, out=o1);
+	Register(in=o1, load=enable1, out=o2);
+	Mux16(a=f1, b=o2, sel=msel, out=o3);
+	Register(in=o3, load=enable2, out=o4);
+	Add16(a=o2, b=o4, out=o5, out=out);
+}

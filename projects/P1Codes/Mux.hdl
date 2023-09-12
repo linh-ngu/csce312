@@ -1,0 +1,20 @@
+//NAME AND UIN
+// Linh Nguyen 231007811
+
+/** 
+ * Multiplexor:
+ * out = a if sel == 0
+ *       b otherwise
+ */
+
+CHIP Mux {
+    IN a, b, sel;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    And(a=b, b=sel, out=c);
+    Not(in=sel, out=notSel);
+    And(a=a, b=notSel, out=d);
+    Or(a=c, b=d, out=out);
+}

@@ -1,0 +1,19 @@
+// NAME and UIN
+// Linh Nguyen 231007811
+
+/**
+ * And gate: 
+ * out = 1 if (a == 1 and b == 1)
+ *       0 otherwise
+ */
+
+CHIP And {
+    IN a, b;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Nor(a=a,b=a,out=notA);
+    Nor(a=b,b=b,out=notB);
+    Nor(a=notA,b=notB,out=out);
+}

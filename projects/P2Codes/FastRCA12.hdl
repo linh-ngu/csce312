@@ -1,0 +1,31 @@
+// Name and UIN
+// Linh Nguyen
+// 231007811
+
+/**
+ * Optimizes the carry propagation delay along RCA4 boundaries
+ * using duplication and parallel assembly of logic 
+ * The chip performs out=a+b
+ * Both inputs a and b are in UNSIGNED format
+ * carry output reflects the overflow 
+ */
+
+
+CHIP FastRCA12 {
+    IN a[12], b[12];
+    OUT out[12], carry;
+	
+    PARTS:
+    // Put your code here:
+
+    Add4(a=a[0..3], b=b[0..3], c=false, sum=out[0..3], carry=c1);
+    Add4(a=a[4..7], b=b[4..7], c=false, sum=outfalse1, carry=c2);
+    Add4(a=a[4..7], b=b[4..7], c=true, sum=outtrue1, carry=c3);
+    Add4(a=a[8..11], b=b[8..11], c=false, sum=outfalse2, carry=c4);
+    Add4(a=a[8..11], b=b[8..11], c=true, sum=outtrue2, carry=c5);
+
+    Mux16(a[0..3]=outfalse1, b[0..3]=outtrue1, sel=c1, out[0..3]=out[4..7]); 
+    Mux(a=c2, b=c3, sel=c1, out=c10);   
+    Mux16(a[0..3]=outfalse2, b[0..3]=outtrue2, sel=c10, out[0..3]=out[8..11]);
+    Mux(a=c4, b=c5, sel=c10, out=carry);
+}
